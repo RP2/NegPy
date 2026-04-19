@@ -1,5 +1,14 @@
 # Change Log
 
+## 0.14.1
+
+- Added **`override.toml`**: a config file in `Documents/NegPy/` (created on first run) for forcing GPU backend, Qt rendering, texture size cap, and more — without touching the app. See [Troubleshooting](../README.md#-troubleshooting) for details.
+- Fix: **D-Range Clip** slider now uses a logarithmic scale for much finer control at low values.
+- Fix: **Autocrop Offset** maximum raised to 100, allowing larger offsets on wide-border scans.
+- Fix: 16-bit colour TIFF exports now use a proper 16-bit ICC colour transform.
+- UX: Added empty-state overlay on the canvas when no image is loaded.
+- Performance & stability improvements.
+
 ## 0.14.0
 
 - Added **Split Toning**: independent shadow and highlight color tinting with hue (0–360°) and strength controls. Works on both color and B&W scans. Applied in Lab space — luminance is preserved exactly.
