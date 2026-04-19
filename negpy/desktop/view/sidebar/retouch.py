@@ -79,6 +79,7 @@ class RetouchSidebar(BaseSidebar):
 
     def _on_pick_toggled(self, checked: bool) -> None:
         self.controller.set_active_tool(ToolMode.DUST_PICK if checked else ToolMode.NONE)
+        self.manual_size_slider.setVisible(checked)
 
     def sync_ui(self) -> None:
         conf = self.state.config.retouch
