@@ -39,7 +39,7 @@ class ExportSidebar(BaseSidebar):
         self.fmt_combo.setCurrentText(conf.export_fmt)
 
         self.cs_combo = QComboBox()
-        self.cs_combo.addItems([cs.value for cs in ColorSpace] + ["Same as Source"])
+        self.cs_combo.addItems([cs.value for cs in ColorSpace])
         self.cs_combo.setCurrentText(conf.export_color_space)
         fmt_row.addWidget(self.fmt_combo)
         fmt_row.addWidget(self.cs_combo)

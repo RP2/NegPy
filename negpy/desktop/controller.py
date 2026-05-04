@@ -289,10 +289,11 @@ class AppController(QObject):
             )
         )
 
-    def _on_preview_loaded(self, file_path: str, raw: Any, dims: Any) -> None:
+    def _on_preview_loaded(self, file_path: str, raw: Any, dims: Any, source_cs: str) -> None:
         self.state.preview_raw = raw
         self.state.original_res = dims
         self.state.current_file_path = file_path
+        self.state.source_cs = source_cs
         self.preview_loaded.emit()
         self.request_render()
 

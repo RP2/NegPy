@@ -1,6 +1,7 @@
 import rawpy
 from typing import Any, ContextManager, Tuple
 from negpy.domain.interfaces import IImageLoader
+from negpy.infrastructure.loaders.helpers import detect_color_space_from_raw
 
 
 class RawpyLoader(IImageLoader):
@@ -14,7 +15,7 @@ class RawpyLoader(IImageLoader):
         metadata = {
             "orientation": 0,
             "raw_flip": 0,
-            "color_space": "Adobe RGB",
+            "color_space": detect_color_space_from_raw(raw) or "Adobe RGB",
         }
 
         return raw, metadata

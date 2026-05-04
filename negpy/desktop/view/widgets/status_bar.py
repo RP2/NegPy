@@ -33,10 +33,8 @@ class TopStatusBar(QWidget):
 
         layout.addStretch()
 
-        self.zoom_label = QLabel("")
-        self.dims_label = QLabel("")
-        layout.addWidget(self.zoom_label)
-        layout.addWidget(self.dims_label)
+        self.file_pos_label = QLabel("")
+        layout.addWidget(self.file_pos_label)
 
         self.progress = QProgressBar()
         self.progress.setFixedHeight(3)
@@ -64,10 +62,9 @@ class TopStatusBar(QWidget):
         if timeout > 0:
             QTimer.singleShot(timeout, lambda: self.msg_label.setText("ready"))
 
-    def set_right_cluster(self, zoom: str, dims: str, tool: str) -> None:
-        self.zoom_label.setText(zoom)
-        self.dims_label.setText(dims)
+    def set_right_cluster(self, tool: str, file_pos: str) -> None:
         self.tool_label.setText(tool)
+        self.file_pos_label.setText(file_pos)
 
     def set_progress(self, current: int, total: int):
         if total <= 0:

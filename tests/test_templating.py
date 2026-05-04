@@ -7,7 +7,7 @@ from negpy.services.export.templating import render_export_filename
 
 
 def test_basic_templating():
-    conf = ExportConfig(filename_pattern="test_{{ original_name }}_{{ colorspace }}")
+    conf = ExportConfig(filename_pattern="test_{{ original_name }}_{{ colorspace }}", export_color_space="Adobe RGB")
     result = render_export_filename("/path/to/image.orf", conf)
     assert result == "test_image_Adobe_RGB"
 
@@ -50,7 +50,7 @@ def test_border_logic():
 
 
 def test_cleanup_logic():
-    conf = ExportConfig(filename_pattern="{{ original_name }} - {{ colorspace }} --- final")
+    conf = ExportConfig(filename_pattern="{{ original_name }} - {{ colorspace }} --- final", export_color_space="Adobe RGB")
     # Structural template separators cleaned; original_name content preserved verbatim.
     result = render_export_filename("my scan.jpg", conf)
     assert result == "my scan_Adobe_RGB_final"
@@ -137,7 +137,7 @@ def test_original_name_repeated_in_pattern():
 
 def test_structural_dashes_cleaned_but_original_name_untouched():
     """Dashes as template separators → underscores; dashes inside original_name → preserved."""
-    conf = ExportConfig(filename_pattern="{{ original_name }}-{{ colorspace }}-final")
+    conf = ExportConfig(filename_pattern="{{ original_name }}-{{ colorspace }}-final", export_color_space="Adobe RGB")
     result = render_export_filename("IMG-0001.orf", conf)
     assert result == "IMG-0001_Adobe_RGB_final"
 

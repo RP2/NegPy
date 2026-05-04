@@ -237,7 +237,7 @@ class PreviewLoadWorker(QObject):
     Keeps the UI thread free during slow I/O and demosaicing.
     """
 
-    finished = pyqtSignal(str, object, object)  # (file_path, raw ndarray, dims tuple)
+    finished = pyqtSignal(str, object, object, str)  # (file_path, raw ndarray, dims tuple, source_cs)
     error = pyqtSignal(str)
 
     def __init__(self, preview_service) -> None:
@@ -247,13 +247,14 @@ class PreviewLoadWorker(QObject):
     @pyqtSlot(PreviewLoadTask)
     def process(self, task: PreviewLoadTask) -> None:
         try:
-            raw, dims, _ = self._preview_service.load_linear_preview(
+            raw, dims, metadata = self._preview_service.load_linear_preview(
                 task.file_path,
                 task.workspace_color_space,
                 linear_raw=task.linear_raw,
                 full_resolution=task.full_resolution,
             )
-            self.finished.emit(task.file_path, raw, dims)
+            source_cs = metadata.get("color_space", "")
+            self.finished.emit(task.file_path, raw, dims, source_cs)
         except Exception as e:
             logger.exception(f"Asset load failed: {task.file_path}")
             self.error.emit(str(e))

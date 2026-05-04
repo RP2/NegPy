@@ -2,7 +2,9 @@
 
 ## 0.17.2
 
-- Fix: export filename templating now preserves `original_name` verbatim — dashes, spaces, and multiple/leading/trailing underscores in the original filename are no longer mangled by the cleanup pass. Also removed `positive_` suffix from default pattern.
+- Fix: export filename templating now preserves `original_name` verbatim — dashes, spaces, and multiple/leading/trailing underscores in the original filename are no longer mangled by the cleanup pass.
+- Changed default export filename pattern from `positive_{{ original_name }}` to `{{ original_name }}`.
+- UX: Status bar - replaced zoom % and resolution (shown elsewhere) with a file position counter (`3 / 12`) for batch workflows.
 
 ## 0.17.1
 

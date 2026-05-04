@@ -89,7 +89,7 @@ class TestAppController(unittest.TestCase):
         raw = object()
         dims = (1234, 5678)
 
-        self.controller._on_preview_loaded("dummy.dng", raw, dims)
+        self.controller._on_preview_loaded("dummy.dng", raw, dims, "")
 
         self.assertIs(self.controller.state.preview_raw, raw)
         self.assertEqual(self.controller.state.original_res, dims)

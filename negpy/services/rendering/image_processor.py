@@ -12,6 +12,7 @@ from negpy.domain.models import (
     WorkspaceConfig,
     ExportConfig,
     ExportFormat,
+    ColorSpace,
 )
 from negpy.features.process.models import ProcessMode
 from negpy.domain.interfaces import PipelineContext
@@ -140,9 +141,9 @@ class ImageProcessor:
             params = dc_replace(params, export=export_settings)
 
             ctx_mgr, metadata = loader_factory.get_loader(file_path)
-            source_cs = metadata.get("color_space", "Adobe RGB")
+            source_cs = metadata.get("color_space", ColorSpace.ADOBE_RGB.value)
             target_cs = export_settings.export_color_space
-            if target_cs == "Same as Source":
+            if target_cs == ColorSpace.SAME_AS_SOURCE.value:
                 target_cs = source_cs
             color_space = str(target_cs)
 
@@ -182,7 +183,7 @@ class ImageProcessor:
                 # Release full-res arrays pinned in the CPU stage cache.
                 self.engine_cpu.cache.clear()
 
-            is_greyscale = export_settings.export_color_space == "Greyscale"
+            is_greyscale = color_space == ColorSpace.GREYSCALE.value
             is_tiff = export_settings.export_fmt != ExportFormat.JPEG
 
             if is_tiff:

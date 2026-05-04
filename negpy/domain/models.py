@@ -51,6 +51,7 @@ class ICCMode(Enum):
 
 
 class ColorSpace(Enum):
+    SAME_AS_SOURCE = "Same as Source"
     SRGB = "sRGB"
     ADOBE_RGB = "Adobe RGB"
     PROPHOTO = "ProPhoto RGB"
@@ -72,7 +73,7 @@ class ExportConfig:
 
     export_path: str = os.path.join(userDir, "export")
     export_fmt: str = ExportFormat.JPEG
-    export_color_space: str = ColorSpace.ADOBE_RGB.value
+    export_color_space: str = ColorSpace.SAME_AS_SOURCE.value
     paper_aspect_ratio: str = AspectRatio.ORIGINAL
     export_print_size: float = 30.0
     export_dpi: int = 300

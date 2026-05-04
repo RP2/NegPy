@@ -239,15 +239,18 @@ class MainWindow(QMainWindow):
         """Updates the persistent metadata panels."""
         if not self.state.current_file_path:
             self.metadata_top.update_values("No File", "- x - px")
-            self.metadata_bottom.update_values("Edits: 0", "16-bit")
-            self.top_status.set_right_cluster("", "", "")
+            self.metadata_bottom.update_values("Edits: 0", "")
+            self.top_status.set_right_cluster("", "")
             return
 
         filename = os.path.basename(self.state.current_file_path)
         w, h = self.state.original_res
         res_str = f"{w} x {h} px"
 
-        mode_str = f"16-bit | {self.state.config.process.process_mode}"
+        cs = self.state.config.export.export_color_space
+        if cs == "Same as Source":
+            cs = self.state.source_cs or "Same as Source"
+        mode_str = f"{self.state.config.process.process_mode} | {cs}"
         edits_str = f"Edits: {self.state.undo_index}"
 
         self.metadata_top.update_values(filename, res_str)
@@ -255,14 +258,14 @@ class MainWindow(QMainWindow):
         self._update_status_right()
 
     def _on_zoom_info_changed(self, zoom: float) -> None:
-        self._update_status_right()
+        pass
 
     def _update_status_right(self) -> None:
-        zoom = f"{int(self.canvas.zoom_level * 100)}%"
-        w, h = self.state.original_res
-        dims = f"{w}×{h}" if w and h else ""
         tool_label = self.TOOL_LABELS.get(self.state.active_tool, "")
-        self.top_status.set_right_cluster(zoom, dims, tool_label)
+        total = len(self.state.uploaded_files)
+        idx = self.state.selected_file_idx
+        file_pos = f"{idx + 1} / {total}" if total > 1 and idx >= 0 else ""
+        self.top_status.set_right_cluster(tool_label, file_pos)
 
     def _on_canvas_clicked(self, nx: float, ny: float) -> None:
         self.top_status.showMessage(f"Clicked at: {nx:.3f}, {ny:.3f}")

@@ -26,6 +26,7 @@ class AppState:
 
     current_file_path: Optional[str] = None
     current_file_hash: Optional[str] = None
+    source_cs: str = ""
     config: WorkspaceConfig = field(default_factory=WorkspaceConfig)
     workspace_color_space: str = "Adobe RGB"
     is_processing: bool = False
