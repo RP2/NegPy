@@ -7,6 +7,7 @@
 - Added **Overwrite existing files** toggle — when disabled, exports get incrementing suffixes (`_2`, `_3`) to avoid overwriting.
 - Tutorial overlay now shows keyboard navigation hints at the bottom.
 - Added **Metadata panel**: new "Metadata" tab in the session panel — set Film stock, Format, Developer, Push/Pull, and Scanner info written as EXIF tags into exported files. Shows read-only inherited EXIF from the source file (camera make/model, lens, exposure settings). Optionally sync custom metadata across all files in a batch export.
+- Fix: mouse input in tutorial (Windows) @alessandrv
 
 ## 0.18.2
 
