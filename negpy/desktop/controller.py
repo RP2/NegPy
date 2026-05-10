@@ -644,7 +644,7 @@ class AppController(QObject):
             return
 
         target_size = float(APP_CONFIG.preview_render_size)
-        if self.state.hq_preview and preview_raw is not None:
+        if self.state.hq_preview:
             target_size = float(max(preview_raw.shape[:2]))
 
         task = RenderTask(

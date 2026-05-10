@@ -73,7 +73,7 @@ class ImageProcessor:
         Executes rendering pipeline. Returns result (ndarray/GPUTexture) and metrics.
         """
         h_orig, w_cols = img.shape[:2]
-        scale_factor = max(h_orig, w_cols) / float(render_size_ref)
+        scale_factor = max(h_orig, w_cols) / float(APP_CONFIG.preview_render_size)
 
         context = PipelineContext(
             scale_factor=scale_factor,
