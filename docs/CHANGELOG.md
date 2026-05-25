@@ -1,5 +1,10 @@
 # Change Log
 
+## 0.22.2
+
+- Fix: tiled GPU export now correctly applies IR dust removal — it was silently skipped when the image was split into tiles during high-resolution export. (#216)
+- Fix: tiled GPU export no longer applies vignette independently per tile — vignette is now computed over the full frame so seams don't appear on large exports. (#217)
+
 ## 0.22.1
 
 - Fix: **Batch Analysis** now respects each file's crop and orientation when computing the roll-wide baseline. Previously, files with large borders (e.g. 6×6 negatives in a 3:2 scan) skewed the average because analysis ran on the full frame. (#213)
