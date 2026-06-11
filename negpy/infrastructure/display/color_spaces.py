@@ -5,6 +5,11 @@ from negpy.domain.models import ColorSpace
 from negpy.kernel.system.config import APP_CONFIG
 from negpy.kernel.system.paths import get_resource_path
 
+# Color space the editing pipeline operates in. RAW is decoded with
+# output_color=raw and treated as Adobe RGB throughout; export converts FROM
+# this space and the preview is color-managed FROM this space to the display.
+WORKING_COLOR_SPACE = ColorSpace.ADOBE_RGB.value
+
 
 class ColorSpaceRegistry:
     """
@@ -17,7 +22,6 @@ class ColorSpaceRegistry:
         ColorSpace.SRGB.value: rawpy.ColorSpace.sRGB,
         ColorSpace.ADOBE_RGB.value: rawpy.ColorSpace.Adobe,
         ColorSpace.PROPHOTO.value: rawpy.ColorSpace.ProPhoto,
-        ColorSpace.WIDE.value: rawpy.ColorSpace.Wide,
         ColorSpace.ACES.value: rawpy.ColorSpace.ACES,
         ColorSpace.P3_D65.value: rawpy.ColorSpace.P3D65,
         ColorSpace.REC2020.value: rawpy.ColorSpace.Rec2020,
@@ -29,9 +33,9 @@ class ColorSpaceRegistry:
         ColorSpace.SRGB.value: "sRGB-v4.icc",
         ColorSpace.ADOBE_RGB.value: "AdobeCompat-v4.icc",
         ColorSpace.PROPHOTO.value: "ProPhoto-v4.icc",
-        ColorSpace.WIDE.value: "WideGamut-v4.icc",
         ColorSpace.P3_D65.value: "DisplayP3-v4.icc",
         ColorSpace.REC2020.value: "Rec2020-v4.icc",
+        ColorSpace.GREYSCALE.value: "GrayGamma2.2.icc",
     }
 
     @classmethod
