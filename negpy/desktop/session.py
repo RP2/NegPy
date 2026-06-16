@@ -528,11 +528,7 @@ class DesktopSessionManager(QObject):
                     if mode == "edits_with_geometry":
                         merged_geo = source_config.geometry
                     else:
-                        merged_geo = replace(
-                            source_config.geometry,
-                            manual_crop_rect=target_config.geometry.manual_crop_rect,
-                            fine_rotation=target_config.geometry.fine_rotation,
-                        )
+                        merged_geo = target_config.geometry
 
                     merged_retouch = replace(source_config.retouch, manual_dust_spots=target_config.retouch.manual_dust_spots)
 
@@ -554,12 +550,18 @@ class DesktopSessionManager(QObject):
         self.settings_saved.emit()
 
     def next_file(self) -> None:
-        if self.state.selected_file_idx < len(self.state.uploaded_files) - 1:
-            self.select_file(self.state.selected_file_idx + 1)
+        display_idx = self.asset_model.actual_to_display(self.state.selected_file_idx)
+        if display_idx == -1:
+            return
+        if display_idx < self.asset_model.rowCount() - 1:
+            self.select_file(self.asset_model.display_to_actual(display_idx + 1))
 
     def prev_file(self) -> None:
-        if self.state.selected_file_idx > 0:
-            self.select_file(self.state.selected_file_idx - 1)
+        display_idx = self.asset_model.actual_to_display(self.state.selected_file_idx)
+        if display_idx == -1:
+            return
+        if display_idx > 0:
+            self.select_file(self.asset_model.display_to_actual(display_idx - 1))
 
     def update_config(self, config: WorkspaceConfig, persist: bool = False, render: bool = True, record_history: bool = True) -> None:
         """
@@ -750,3 +752,32 @@ class DesktopSessionManager(QObject):
 
             self.asset_model.refresh()
             self.state_changed.emit()
+
+    def remove_selected_files(self) -> None:
+        """
+        Removes all currently selected files from the session.
+        """
+        indices = sorted(set(self.state.selected_indices), reverse=True)
+        if not indices:
+            return
+
+        for idx in indices:
+            if 0 <= idx < len(self.state.uploaded_files):
+                file_info = self.state.uploaded_files.pop(idx)
+                self.state.thumbnails.pop(file_info["name"], None)
+
+        if not self.state.uploaded_files:
+            self.state.selected_file_idx = -1
+            self.state.selected_indices = []
+            self.state.current_file_path = None
+            self.state.current_file_hash = None
+            self.state.preview_raw = None
+            self.state.preview_ir = None
+            self.state.has_ir = False
+            self.state.config = WorkspaceConfig()
+        else:
+            new_idx = min(min(indices), len(self.state.uploaded_files) - 1)
+            self.select_file(new_idx)
+
+        self.asset_model.refresh()
+        self.state_changed.emit()
