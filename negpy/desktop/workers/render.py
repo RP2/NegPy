@@ -35,6 +35,8 @@ class RenderTask:
     # True while the crop tool is active: show the full uncropped frame instead of
     # the final crop.
     crop_preview_full: bool = False
+    # Display-only first paint (embedded-JPEG splash): its analysis must not persist.
+    ephemeral: bool = False
 
 
 @dataclass(frozen=True)
@@ -118,10 +120,13 @@ class RenderWorker(QObject):
     def process(self, task: RenderTask) -> None:
         """Executes the rendering pipeline for a single frame."""
         try:
+            # Splash shares the file's source_hash but is the embedded JPEG, not the linear
+            # decode — isolate its cache identity so it can't leak into the real render.
+            pipeline_source_hash = task.source_hash + ("\x00splash" if task.ephemeral else "")
             result, metrics = self._processor.run_pipeline(
                 task.buffer,
                 task.config,
-                task.source_hash,
+                pipeline_source_hash,
                 render_size_ref=task.preview_size,
                 prefer_gpu=task.gpu_enabled,
                 readback_metrics=task.readback_metrics,
@@ -148,6 +153,9 @@ class RenderWorker(QObject):
 
             # Ensure ground truth is stored in metrics for view consumption
             metrics["base_positive"] = result
+            # Render identity, so the controller can reject stale/ephemeral bounds writeback.
+            metrics["source_hash"] = task.source_hash
+            metrics["ephemeral"] = task.ephemeral
 
             self.finished.emit(result, metrics)
             self.metrics_updated.emit(metrics)
