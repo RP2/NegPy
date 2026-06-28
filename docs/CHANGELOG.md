@@ -3,7 +3,7 @@
 ## 0.29.1
 
 - Fix: Previously RGB Scan mode only merged exposures if it was enabled BEFORE loading the files. Now toggling the mode after files are loaded forces the process. (#319)
-- Fix: Flat export having heavy colorcasts for some files (#321)
+- Fix: Flat export having heavy colorcasts for some files. It also follows the selected colorspace instead of hardcoding ProPhoto (#321)
 - Fix: New crosstalk matrices not being correctly bundled with build in 0.29.0.
 
 ## 0.29.0
