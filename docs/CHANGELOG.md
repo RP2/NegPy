@@ -1,5 +1,9 @@
 # Change Log
 
+## 0.31.1
+
+- Fix: new bundled Lab Crosstalk matrices weren't copied to the user's profile folder on startup once any profile already existed there — each bundled matrix is now seeded independently, so later releases' additions show up without waiting on a fresh install.
+
 ## 0.31.0
 
 - **Default tone curve retuned** — Auto Grade targets slightly lower contrast, and the midtone contrast boost eases in more gradually, for a softer out-of-the-box look.

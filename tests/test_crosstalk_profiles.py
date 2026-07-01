@@ -63,6 +63,16 @@ def test_seed_example(tmp_path, monkeypatch):
     assert tomls == ["example.toml"]  # README.md not copied
     assert CrosstalkProfiles.list_profiles() == ["Default", "Example"]
 
-    # Second call is a no-op once a file exists.
+    # Re-running is a no-op for a file the user already has.
+    _write(os.path.join(user_dir, "example.toml"), 'name = "Edited"\nmatrix = [[1,0,0],[0,1,0],[0,0,1]]\n')
     CrosstalkProfiles.seed_example()
-    assert [f for f in os.listdir(user_dir) if f.endswith(".toml")] == tomls
+    assert CrosstalkProfiles.list_profiles() == ["Default", "Edited"]
+
+    # A matrix added to the bundled dir in a later release still gets copied in.
+    _write(
+        os.path.join(bundled_dir, "second.toml"),
+        'name = "Second"\nmatrix = [[1.0, 0.0, 0.0], [0.0, 1.0, 0.0], [0.0, 0.0, 1.0]]\n',
+    )
+    CrosstalkProfiles.seed_example()
+    assert sorted(f for f in os.listdir(user_dir) if f.endswith(".toml")) == ["example.toml", "second.toml"]
+    assert CrosstalkProfiles.list_profiles() == ["Default", "Edited", "Second"]

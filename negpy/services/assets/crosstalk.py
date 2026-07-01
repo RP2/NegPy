@@ -80,20 +80,23 @@ class CrosstalkProfiles:
 
     @staticmethod
     def seed_example() -> None:
-        """Copy bundled gallery matrices into the user folder on first run.
+        """Copy bundled gallery matrices into the user folder, per file.
 
-        Only runs when the user folder has no .toml files, so user edits and
-        deletions are never overwritten.
+        Skips a file that already exists in the user folder, so user edits
+        are never overwritten. New matrices bundled in later releases still
+        get copied in on next startup.
         """
         crosstalk_dir = APP_CONFIG.crosstalk_dir
         bundled_dir = get_resource_path("crosstalk")
         try:
             if not os.path.isdir(crosstalk_dir) or not os.path.isdir(bundled_dir):
                 return
-            if any(f.endswith(".toml") for f in os.listdir(crosstalk_dir)):
-                return
             for fname in os.listdir(bundled_dir):
-                if fname.endswith(".toml"):
-                    shutil.copyfile(os.path.join(bundled_dir, fname), os.path.join(crosstalk_dir, fname))
+                if not fname.endswith(".toml"):
+                    continue
+                dest = os.path.join(crosstalk_dir, fname)
+                if os.path.exists(dest):
+                    continue
+                shutil.copyfile(os.path.join(bundled_dir, fname), dest)
         except OSError:
             pass
