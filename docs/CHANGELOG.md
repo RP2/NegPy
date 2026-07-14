@@ -1,6 +1,11 @@
 # Change Log
 
 
+## 0.37.1
+
+- Fix: **export no longer crashes on non-ASCII film metadata** — a film format like `4x5` (with a `×`) or other non-Latin characters NegPy writes into the EXIF no longer aborts a JPG, TIFF or PNG export; they're safely substituted. @RP2
+- Fix: **spot densitometer no longer crashes on file switch** — hovering the image to read densities while switching frames could abort the app; the readout now goes quiet during the transition instead. @linkmodo
+
 ## 0.37.0
 
 - New: **Crosstalk matrix editor** — a Manage button beside the Process → Crosstalk dropdown opens an editor: browse the bundled matrices (read-only), make an editable copy, adjust the channel-mixing terms with live preview, and save your own profiles as `.toml` files in the NegPy/crosstalk folder.
