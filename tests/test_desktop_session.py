@@ -79,6 +79,7 @@ class TestDesktopSessionSync(unittest.TestCase):
         self.assertIn("last_dust_remove", saved)
         self.assertIn("last_true_black", saved)
         self.assertIn("last_protect_original_metadata", saved)
+        self.assertIn("last_cast_removal_strength", saved)
 
     def test_protect_original_metadata_carries_globally(self):
         sticky = {
@@ -108,6 +109,7 @@ class TestDesktopSessionSync(unittest.TestCase):
             "last_paper_dmin": True,
             "last_true_black": True,
             "last_paper_profile": "ilford_mg_rc",
+            "last_cast_removal_strength": 0.8,
         }
         self.mock_repo.get_global_setting.side_effect = lambda key, default=None: sticky.get(key, default)
         config = self.session._apply_sticky_settings(WorkspaceConfig(), only_global=False)
@@ -116,6 +118,14 @@ class TestDesktopSessionSync(unittest.TestCase):
         self.assertTrue(config.exposure.paper_dmin)
         self.assertTrue(config.exposure.true_black)
         self.assertEqual(config.exposure.paper_profile, "ilford_mg_rc")
+        self.assertEqual(config.exposure.cast_removal_strength, 0.8)
+
+    def test_cast_removal_zero_carries_to_new_files(self):
+        """Sticky must carry an explicit zero, not just non-zero — default is 0.5."""
+        sticky = {"last_export_config": {}, "last_cast_removal_strength": 0.0}
+        self.mock_repo.get_global_setting.side_effect = lambda key, default=None: sticky.get(key, default)
+        config = self.session._apply_sticky_settings(WorkspaceConfig(), only_global=False)
+        self.assertEqual(config.exposure.cast_removal_strength, 0.0)
 
     def test_true_black_off_carries_to_new_files(self):
         """Sticky must carry an explicit off, not just on — default is already False."""
