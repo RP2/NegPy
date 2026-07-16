@@ -771,7 +771,11 @@ class ImageProcessor:
     def _apply_scaling_and_border_f32(self, img: np.ndarray, params: WorkspaceConfig, export_settings: ExportConfig) -> np.ndarray:
         """CPU fallback for layout application."""
         result, _ = PrintService.apply_layout(
-            img, export_settings, border_size=params.finish.border_size, border_color=params.finish.border_color
+            img,
+            export_settings,
+            border_size=params.finish.border_size,
+            border_color=PrintService.effective_border_color(params.finish, params.toning),
+            finish=params.finish,
         )
         return result
 
